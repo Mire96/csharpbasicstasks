@@ -58,6 +58,7 @@ namespace ChessProblem
             using (FileStream ChessBoardFile = File.Open(path, FileMode.OpenOrCreate))
             {   
                 ChessBoardFile.Seek(0, SeekOrigin.End);
+                string lineToWrite = "\n";
 
                 for (int i = 0; i < Board.GetLength(0); i++)
                 {
@@ -65,18 +66,20 @@ namespace ChessProblem
                     {
                         if (Board[i, j].Figure == null)
                         {
-                            AddText(ChessBoardFile, "* ");
+                            lineToWrite += "* ";
                         }
                         else
                         {
-                            AddText(ChessBoardFile, (Board[i, j].Figure.Mark + " "));
+                            lineToWrite += Board[i, j].Figure.Mark + " ";
                         }
-                        AddText(ChessBoardFile, "\n");
-
+                        
                     }
+                    lineToWrite += "\n";
+                    AddText(ChessBoardFile, lineToWrite);
+                    lineToWrite = "";
 
                 }
-                AddText(ChessBoardFile, "End of table");
+                AddText(ChessBoardFile, "End of table\n");
                 Console.WriteLine("File written successfully");
             }
             using (FileStream fs = File.OpenRead(path))
