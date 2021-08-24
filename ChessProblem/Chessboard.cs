@@ -58,25 +58,28 @@ namespace ChessProblem
             using (FileStream ChessBoardFile = File.Open(path, FileMode.OpenOrCreate))
             {   
                 ChessBoardFile.Seek(0, SeekOrigin.End);
-
+                StringBuilder linesToWriteSB = new StringBuilder("\n", 50);
                 for (int i = 0; i < Board.GetLength(0); i++)
                 {
                     for (int j = 0; j < Board.GetLength(1); j++)
                     {
                         if (Board[i, j].Figure == null)
                         {
-                            AddText(ChessBoardFile, "* ");
+                            linesToWriteSB.Append("* ");
                         }
                         else
                         {
-                            AddText(ChessBoardFile, (Board[i, j].Figure.Mark + " "));
+                            linesToWriteSB.Append(Board[i, j].Figure.Mark + " ");
                         }
-                        AddText(ChessBoardFile, "\n");
-
+                        
                     }
+                    AddText(ChessBoardFile, linesToWriteSB);
+                    linesToWriteSB.Clear();
+                    linesToWriteSB.Append("\n");
 
                 }
-                AddText(ChessBoardFile, "End of table");
+                linesToWriteSB.Append("End of table");
+                AddText(ChessBoardFile, linesToWriteSB);
                 Console.WriteLine("File written successfully");
             }
             using (FileStream fs = File.OpenRead(path))
@@ -91,9 +94,9 @@ namespace ChessProblem
             
         }
 
-        private static void AddText(FileStream fs, string value)
+        private static void AddText(FileStream fs, StringBuilder value)
         {
-            byte[] info = new UTF8Encoding(true).GetBytes(value);
+            byte[] info = new UTF8Encoding(true).GetBytes(value.ToString());
             fs.Write(info, 0, info.Length);
         }
 

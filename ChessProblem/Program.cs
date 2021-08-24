@@ -38,6 +38,8 @@ namespace ChessProblem
             chessboard.BoardPrint();
             chessboard.BoardWrite();
 
+
+
             //Field test = chessboard.FindFieldOnBoard(f1);
 
             //Console.WriteLine(test);
