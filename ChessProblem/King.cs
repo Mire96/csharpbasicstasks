@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Milosev komentar
+//Dodat komentar za test 1
 
 namespace ChessProblem
 {
