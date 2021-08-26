@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// Milosev komentar
+
 namespace ChessProblem
 {
     class King : IFigure
