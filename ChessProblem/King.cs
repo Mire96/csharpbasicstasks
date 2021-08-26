@@ -5,8 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Milosev komentar
+<<<<<<< HEAD
 //Dodat komentar za test 1
 
+=======
+//Adding comment for test 2
+>>>>>>> 8153c59 (Commented test 2)
 namespace ChessProblem
 {
     class King : IFigure
