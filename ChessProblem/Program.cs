@@ -8,6 +8,7 @@ namespace ChessProblem
         {
             Chessboard chessboard = new Chessboard();
 
+<<<<<<< HEAD
             Console.WriteLine("Input piece coordinates followed by coordinates of the field where you want to move.\n\nExample a1 a2, where a1 is the field where the piece is located and a2 is the destination");
             Console.WriteLine("\nAre you ready to begin a game?");
             Console.WriteLine("\nPress enter to start");
@@ -15,6 +16,18 @@ namespace ChessProblem
             chessboard.PrintCoordinates();
             
 
+=======
+
+            
+
+            Console.WriteLine("Input piece coordinates followed by coordinates of the field where you want to move.\n\nExample a1 a2, where a1 is the field where the piece is located and a2 is the destination");
+            Console.WriteLine("\nAre you ready to begin a game?");
+            Console.WriteLine("\nPress enter to start");
+            Console.ReadLine();
+            chessboard.PrintCoordinates();
+            
+
+>>>>>>> 32a76952d574e141cb76a2f691a098792b65aef0
             while (true)
             {
                 Console.Clear();
