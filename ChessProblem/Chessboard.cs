@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
+using System.IO
 
 namespace ChessProblem
 {
@@ -195,27 +195,7 @@ namespace ChessProblem
             return false;
         }
 
-
-        public bool MovePiece(Field pieceField, Field destinationField)
-        {
-            IFigure fig = FindPieceOnBoard(pieceField);
-            Field f1 = FindFieldOnBoard(destinationField);
-
-            if(fig == null || f1 == null)
-            {
-                Console.WriteLine("Piece or field not found on board. Try again");
-                return false;
-            }
-<<<<<<< HEAD
-
-            if (fig.MoveCheck(f1,this))
-            {
-=======
-
-            return false;
-            
-        }
-
+ 
         public bool MovePiece(Field pieceField, Field destinationField)
         {
             IFigure fig = FindPieceOnBoard(pieceField);
@@ -229,7 +209,6 @@ namespace ChessProblem
 
             if (fig.MoveCheck(f1,this))
             {
->>>>>>> 32a76952d574e141cb76a2f691a098792b65aef0
                 if (fig.NoFigureInPath(f1, this)){
                     if (CheckAvailableField(fig, f1))
                     {
