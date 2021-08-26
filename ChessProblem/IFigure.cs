@@ -16,10 +16,7 @@ namespace ChessProblem
 
 
         public bool MoveCheck(Field f1);
-
-        
-
-
-
+        bool NoFigureInPath(Field f1, Chessboard chessboard);
+        bool MoveCheck(Field f1, Chessboard chessboard);
     }
 }

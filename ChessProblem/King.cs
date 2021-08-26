@@ -29,10 +29,34 @@ namespace ChessProblem
 
         public bool MoveCheck(Field f1)
         {
-            if ((this.Field.CheckSameDiagonal(f1) && this.Field.CalculateFieldDistance(f1) == 2) ||
-                ((this.Field.CheckSameRow(f1) || this.Field.CheckSameColumn(f1)) && this.Field.CalculateFieldDistance(f1) == 1))
+            return true;
+        }
+
+        private bool BasicKingMoveRules(Field f1) => (this.Field.CheckSameDiagonal(f1) && this.Field.CalculateFieldDistance(f1) == 2) ||
+                ((this.Field.CheckSameRow(f1) || this.Field.CheckSameColumn(f1)) && this.Field.CalculateFieldDistance(f1) == 1);
+
+        public bool NoFigureInPath(Field f1, Chessboard chessboard)
+        {
+            return true;
+        }
+
+        public bool MoveCheck(Field f1, Chessboard chessboard)
+        {
+            if (BasicKingMoveRules(f1) && CheckForCheck(f1, chessboard))
             {
                 return true;
+            }
+            return false;
+        }
+
+        private bool CheckForCheck(Field f1, Chessboard chessboard)
+        {
+            foreach(IFigure CheckingFigure in chessboard.Figures)
+            {
+                if (CheckingFigure.MoveCheck(f1) && CheckingFigure.NoFigureInPath(f1, chessboard)) 
+                {
+                    return true;
+                }
             }
             return false;
         }

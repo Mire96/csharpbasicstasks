@@ -19,7 +19,13 @@ namespace ChessProblem
             Column = Char.ToUpper(column);
             Row = row;
         }
-        
+
+        public Field(string coordinates)
+        {
+            Column = Char.ToUpper(coordinates[0]);
+            Row = coordinates[1]-48;
+        }
+
         public Field()
         {
         }

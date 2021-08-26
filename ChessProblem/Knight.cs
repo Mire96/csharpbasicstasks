@@ -40,9 +40,10 @@ namespace ChessProblem
             Color = color;
         }
 
-        public bool MoveCheck(Field f1)
-        {
-            return this.Field.CalculateFieldDistance(f1) == 3 && !this.Field.CheckSameColumn(f1) && !this.Field.CheckSameRow(f1);
-        }
+        public bool MoveCheck(Field f1) => this.Field.CalculateFieldDistance(f1) == 3 && !this.Field.CheckSameColumn(f1) && !this.Field.CheckSameRow(f1);
+        public bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
+        public bool NoFigureInPath(Field f1, Chessboard chessboard) => true;
+
+        
     }
 }
