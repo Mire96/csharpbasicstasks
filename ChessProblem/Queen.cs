@@ -40,10 +40,49 @@ namespace ChessProblem
             Color = color;
         }
 
-        public bool MoveCheck(Field f1)
+        public bool MoveCheck(Field f1) => Field.CheckSameDiagonal(f1) || Field.CheckSameColumn(f1) || Field.CheckSameRow(f1);
+
+        public bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
+
+        public bool NoFigureInPath(Field f1, Chessboard chessboard)
         {
-            return Field.CheckSameDiagonal(f1) || Field.CheckSameColumn(f1) || Field.CheckSameRow(f1);
+            if (this.Field.CheckSameDiagonal(f1))
+            {
+                foreach (IFigure figure in chessboard.Figures)
+                {
+                    if(this.Field.CheckSameDiagonal(figure.Field) && DistanceChecker(figure, f1))
+                    {
+                        Console.WriteLine(Mark + " can't move because there is a figure in path");
+                        return false;
+                    }
+                }
+            }
+            else 
+            {
+                foreach (IFigure figure in chessboard.Figures)
+                {
+                    if (MoveCheck(figure.Field) && DistanceChecker(figure, f1))
+                    {
+                        Console.WriteLine(Mark + " can't move because there is a figure in path");
+                        return false;
+                    }
+                }
+            }
+            return true;
 
         }
+
+        private bool DistanceChecker(IFigure figure, Field f1)
+        {
+            int distance = this.Field.CalculateFieldDistance(f1);
+
+            if (this.Field.CalculateFieldDistance(figure.Field) < distance &&
+                f1.CalculateFieldDistance(figure.Field) < distance)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }
