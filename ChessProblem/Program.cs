@@ -16,8 +16,9 @@ namespace ChessProblem
 
             while (true)
             {
-                Console.Clear();
+                //Console.Clear();
                 chessboard.BoardPrint();
+                Console.WriteLine("It's " + chessboard.Turn + "'s turn to move");
                 Console.WriteLine("Input next move");
                 try
                 {
@@ -31,6 +32,8 @@ namespace ChessProblem
                     if (moveCheck)
                     {
                         Console.WriteLine("MOVE SUCCESSFUL");
+                        chessboard.UncheckEnPassant();
+                        chessboard.ChangeTurn();
                     }
                     else
                     {

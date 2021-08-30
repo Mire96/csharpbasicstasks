@@ -12,6 +12,7 @@ namespace ChessProblem
         public Field [,] Board { get; set; }
         public List<IFigure> Figures { get; set; }
         public List<IFigure> EatenFigures { get; set; }
+        public Color Turn { get; set; }
 
         
 
@@ -19,6 +20,7 @@ namespace ChessProblem
         {
             Figures = new List<IFigure>();
             EatenFigures = new List<IFigure>();
+            Turn = Color.WHITE;
             Field [,] testBoard = new Field[8, 8];
             for(int i = 0; i < testBoard.GetLength(0); i++) 
             { 
@@ -72,6 +74,8 @@ namespace ChessProblem
             IFigure fig15= new Knight(f15, 'n', Color.BLACK);
             IFigure fig16= new Rook(f16, 'r', Color.BLACK);
 
+            InitPawns();
+
 
             PlacePiece(fig1);
             PlacePiece(fig2);
@@ -89,6 +93,30 @@ namespace ChessProblem
             PlacePiece(fig14);
             PlacePiece(fig15);
             PlacePiece(fig16);
+        }
+
+        private void InitPawns()
+        {
+            
+                for (int j = 0; j < Board.GetLength(1); j++)
+                {
+                    PlacePiece(new Pawn(Color.WHITE, Board[6, j]));
+                    PlacePiece(new Pawn(Color.BLACK, Board[1, j]));
+            }
+                
+            
+        }
+
+        internal void ChangeTurn()
+        {
+            if(this.Turn == Color.WHITE)
+            {
+                this.Turn = Color.BLACK;
+            }
+            else
+            {
+                this.Turn = Color.WHITE;
+            }
         }
 
         public void BoardPrint()
@@ -186,7 +214,7 @@ namespace ChessProblem
             return false;
         }
 
-        private bool CheckAvailableField(IFigure fig, Field field)
+        public bool CheckAvailableField(IFigure fig, Field field)
         {
             if (field.Figure == null)
             {
@@ -198,33 +226,44 @@ namespace ChessProblem
 
         public bool MovePiece(Field pieceField, Field destinationField)
         {
-            IFigure fig = FindPieceOnBoard(pieceField);
-            Field f1 = FindFieldOnBoard(destinationField);
+            IFigure FigureToMove = FindPieceOnBoard(pieceField);
+            Field DestinationField = FindFieldOnBoard(destinationField);
 
-            if(fig == null || f1 == null)
+            if(FigureToMove == null || DestinationField == null)
             {
                 Console.WriteLine("Piece or field not found on board. Try again");
                 return false;
             }
-            if (fig.MoveCheck(f1,this))
+
+            if (FigureToMove.Color != this.Turn)
             {
-                if (fig.NoFigureInPath(f1, this)){
-                    if (CheckAvailableField(fig, f1))
+                Console.WriteLine("It's not " + FigureToMove.Color + "'s turn to move. Choose a " + this.Turn + " figure");
+                return false;
+            }
+
+            if (KingInCheck())
+            {
+                Console.WriteLine(this.Turn + "'s King is in check, you have to move him");
+                return false;
+            }
+
+            if (FigureToMove.MoveCheck(DestinationField,this))
+            {
+                if (FigureToMove.NoFigureInPath(DestinationField, this)){
+                    if (CheckAvailableField(FigureToMove, DestinationField))
                     {
-                        fig.Field.Figure = null;
-                        fig.Field = f1;
-                        f1.Figure = fig;
+                        RemoveEatenFigures(FigureToMove);
+                        Move(FigureToMove, DestinationField);
                         return true;
                     }
                     else
                     {
-                        if (DifferentColorCheck(fig, f1))
+                        if (DifferentColorCheck(FigureToMove, DestinationField))
                         {
-                            EatenFigures.Add(f1.Figure);
-                            fig.Field.Figure = null;
-                            fig.Field = f1;
-                            f1.Figure = fig;
-                            Console.WriteLine("Figure eaten");
+                            DestinationField.Figure.Eaten = true;
+                            RemoveEatenFigures(FigureToMove);
+                            Move(FigureToMove, DestinationField);
+                            
                             return true;
                         }
                         else
@@ -237,10 +276,64 @@ namespace ChessProblem
                 
                 
             }
-
+            Console.WriteLine("Illegal move with the piece");
             return false;
         }
 
+        private bool KingInCheck()
+        {
+            IFigure King = Figures.Find(x => (x.Mark == 'k' || x.Mark == 'K') && x.Color == this.Turn);
+            foreach (IFigure CheckingFigure in Figures)
+            {
+                if (King.Color != CheckingFigure.Color && CheckingFigure.MoveCheck(King.Field, this) && CheckingFigure.NoFigureInPath(King.Field, this))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        
+
+        public void UncheckEnPassant()
+        {
+            foreach(IFigure figure in Figures)
+            {
+                if(figure.Color != this.Turn && figure.EnPassantCheck == true)
+                {
+                    figure.EnPassantCheck = false;
+                }
+            }
+        }
+
+        private void RemoveEatenFigures(IFigure FigureToMove)
+        {
+            IFigure figureToRemove = null;
+            foreach (IFigure figure in this.Figures)
+            {
+                if (figure.Eaten)
+                {
+                    figureToRemove = figure;
+                    break;
+                }
+            }
+            if(figureToRemove != null && figureToRemove.Field != null)
+            {
+                Console.WriteLine(figureToRemove.Mark + figureToRemove.Field.ToString() + " eaten by " + FigureToMove.Mark);
+                figureToRemove.Field.Figure = null;
+                figureToRemove.Field = null;
+                EatenFigures.Add(figureToRemove);
+                Figures.Remove(figureToRemove);
+            }
+            
+        }
+
+        private void Move(IFigure FigureToMove, Field DestinationField)
+        {
+            FigureToMove.Field.Figure = null;
+            FigureToMove.Field = DestinationField;
+            DestinationField.Figure = FigureToMove;
+        }
 
         private IFigure FindPieceOnBoard(Field pieceField)
         {

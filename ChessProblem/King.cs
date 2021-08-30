@@ -14,6 +14,8 @@ namespace ChessProblem
         public Field Field { get ; set ; }
         public char Mark { get ; set ; }
         public Color Color { get ; set ; }
+        public bool EnPassantCheck { get; set; }
+        public bool Eaten { get; set; }
 
         public King(Field field, char mark, Color color)
         {
@@ -27,16 +29,20 @@ namespace ChessProblem
                 Mark = Char.ToUpper(mark);
             }
             Color = color;
+            EnPassantCheck = false;
+            Eaten = false;
         }
 
 
         public bool MoveCheck(Field f1)
         {
-            return true;
+            return this.BasicKingMoveRules(f1);
         }
 
-        private bool BasicKingMoveRules(Field f1) => (this.Field.CheckSameDiagonal(f1) && this.Field.CalculateFieldDistance(f1) == 2) ||
-                ((this.Field.CheckSameRow(f1) || this.Field.CheckSameColumn(f1)) && this.Field.CalculateFieldDistance(f1) == 1);
+        private bool BasicKingMoveRules(Field f1) 
+        {
+            return (this.Field.CheckSameDiagonal(f1) && this.Field.CalculateFieldDistance(f1) == 2) || ((this.Field.CheckSameRow(f1) || this.Field.CheckSameColumn(f1)) && this.Field.CalculateFieldDistance(f1) == 1);
+        }
 
         public bool NoFigureInPath(Field f1, Chessboard chessboard)
         {
@@ -49,6 +55,8 @@ namespace ChessProblem
             {
                 return true;
             }
+
+            Console.WriteLine("That field is being attacked by a figure of the opposite color");
             return false;
         }
 
@@ -56,12 +64,12 @@ namespace ChessProblem
         {
             foreach(IFigure CheckingFigure in chessboard.Figures)
             {
-                if (CheckingFigure.MoveCheck(f1) && CheckingFigure.NoFigureInPath(f1, chessboard)) 
+                if (this.Color != CheckingFigure.Color && CheckingFigure.MoveCheck(f1, chessboard) &&  CheckingFigure.NoFigureInPath(f1, chessboard)) 
                 {
-                    return true;
+                    return false;
                 }
             }
-            return false;
+            return true;
         }
     }
 }

@@ -12,6 +12,8 @@ namespace ChessProblem
         public char Mark { get ; set ; }
 
         public Color Color { get; set; }
+        public bool EnPassantCheck { get; set; }
+        public bool Eaten { get; set; }
 
         public Bishop(Field field, char mark, Color color)
         {
@@ -26,19 +28,8 @@ namespace ChessProblem
             {
                 Mark = Char.ToUpper(mark);
             }
-        }
-
-        public Bishop(char mark, Color color)
-        {
-            if (color == Color.WHITE)
-            {
-                Mark = Char.ToLower(mark);
-            }
-            else
-            {
-                Mark = Char.ToUpper(mark);
-            }
-            Color = color;
+            EnPassantCheck = false;
+            Eaten = false;
         }
 
         public bool MoveCheck(Field f1) => this.Field.CheckSameDiagonal(f1);

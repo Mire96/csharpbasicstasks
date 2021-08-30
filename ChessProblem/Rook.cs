@@ -13,7 +13,9 @@ namespace ChessProblem
         public char Mark { get ; set ; }
 
         public Color Color { get; set; }
-        
+        public bool EnPassantCheck { get; set; }
+        public bool Eaten { get; set; }
+
         public Rook(Field field, char mark, Color color)
         {
             Field = field;
@@ -26,8 +28,9 @@ namespace ChessProblem
             {
                 Mark = Char.ToUpper(mark);
             }
-            
-            
+            EnPassantCheck = false;
+            Eaten = false;
+
         }
 
         public Rook(char mark, Color color)
