@@ -32,15 +32,15 @@ namespace ChessProblem
             Eaten = false;
         }
 
-        public bool MoveCheck(Field f1) => this.Field.CheckSameDiagonal(f1);
+        public  bool MoveCheck(Field f1) => this.Field.CheckSameDiagonal(f1);
 
-        public bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
+        public  bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
 
         //if there is no figure in path the method returns true
         //It goes through the list of figures and as soon as it finds one where it can move to 
         //and the distance checker shows its between the moving piece and the destination field
         //it returns false, indicating that there is a figure in path
-        public bool NoFigureInPath(Field f1, Chessboard chessboard)
+        public  bool NoFigureInPath(Field f1, Chessboard chessboard)
         {
             foreach(IFigure figure in chessboard.Figures)
             {

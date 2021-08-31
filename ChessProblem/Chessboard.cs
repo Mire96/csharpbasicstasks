@@ -65,6 +65,8 @@ namespace ChessProblem
             IFigure fig7 = new Knight(f7, 'n', Color.WHITE);
             IFigure fig8 = new Rook(f8, 'r', Color.WHITE);
 
+            
+
             IFigure fig9 = new Rook(f9, 'r', Color.BLACK);
             IFigure fig10 = new Knight(f10, 'n', Color.BLACK);
             IFigure fig11= new Bishop(f11, 'b', Color.BLACK);
@@ -223,70 +225,83 @@ namespace ChessProblem
             return false;
         }
 
+        private bool ExecuteMove(IFigure FigureToMove, Field DestinationField) 
+        {
+            bool isMoveExecuted = false;
+
+            if (FigureToMove.MoveCheck(DestinationField, this) &&
+               FigureToMove.NoFigureInPath(DestinationField, this) &&
+               (CheckAvailableField(FigureToMove, DestinationField) || DifferentColorCheck(FigureToMove, DestinationField)))
+            {
+                RemoveEatenFigures(FigureToMove);
+                Move(FigureToMove, DestinationField);
+                isMoveExecuted = true;
+
+            }
+            return isMoveExecuted;
+        }
+
+
+
+        private bool IsCanBeMoveExecuted(IFigure FigureToMove, Field DestinationField) 
+        {
+            bool isMoveCanBeExecuted = true;
+            if (IsFigureOrFieldNotFound(FigureToMove, DestinationField) ||
+               IsNotCorrectColorTurn(FigureToMove) ||
+               IsKingInCheck())
+            {
+                isMoveCanBeExecuted = false;
+            }
+
+            return isMoveCanBeExecuted;
+        }
 
         public bool MovePiece(Field pieceField, Field destinationField)
         {
+            //bool IsPieceCanBeMove = false;
+            //bool IsPieceMoved = false;
             IFigure FigureToMove = FindPieceOnBoard(pieceField);
             Field DestinationField = FindFieldOnBoard(destinationField);
 
-            if(FigureToMove == null || DestinationField == null)
-            {
-                Console.WriteLine("Piece or field not found on board. Try again");
-                return false;
-            }
+            return IsCanBeMoveExecuted(FigureToMove, DestinationField) && ExecuteMove(FigureToMove, DestinationField);
 
-            if (FigureToMove.Color != this.Turn)
-            {
-                Console.WriteLine("It's not " + FigureToMove.Color + "'s turn to move. Choose a " + this.Turn + " figure");
-                return false;
-            }
+            //IsPieceCanBeMove = IsCanBeMoveExecuted(FigureToMove, DestinationField);
+            //if (IsPieceCanBeMove)
+            //{
+            //    IsPieceMoved = ExecuteMove(FigureToMove, DestinationField);
+            //}
+            //Console.WriteLine("Illegal move with the piece");
+            //return IsPieceMoved;
+        }
 
-            if (KingInCheck())
+        private bool IsNotCorrectColorTurn(IFigure figureToMove)
+        {
+            if (figureToMove.Color != this.Turn)
             {
-                Console.WriteLine(this.Turn + "'s King is in check, you have to move him");
-                return false;
+                Console.WriteLine("It's not " + figureToMove.Color + "'s turn to move. Choose a " + this.Turn + " figure");
+                return true;
             }
-
-            if (FigureToMove.MoveCheck(DestinationField,this))
-            {
-                if (FigureToMove.NoFigureInPath(DestinationField, this)){
-                    if (CheckAvailableField(FigureToMove, DestinationField))
-                    {
-                        RemoveEatenFigures(FigureToMove);
-                        Move(FigureToMove, DestinationField);
-                        return true;
-                    }
-                    else
-                    {
-                        if (DifferentColorCheck(FigureToMove, DestinationField))
-                        {
-                            DestinationField.Figure.Eaten = true;
-                            RemoveEatenFigures(FigureToMove);
-                            Move(FigureToMove, DestinationField);
-                            
-                            return true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Another piece of the same color occupies the field");
-                            return false;
-                        }
-                    }
-                }
-                
-                
-            }
-            Console.WriteLine("Illegal move with the piece");
             return false;
         }
 
-        private bool KingInCheck()
+        private bool IsFigureOrFieldNotFound(IFigure figureToMove, Field destinationField)
+        {
+            if (figureToMove == null || destinationField == null)
+            {
+                Console.WriteLine("Piece or field not found on board. Try again");
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsKingInCheck()
         {
             IFigure King = Figures.Find(x => (x.Mark == 'k' || x.Mark == 'K') && x.Color == this.Turn);
             foreach (IFigure CheckingFigure in Figures)
             {
                 if (King.Color != CheckingFigure.Color && CheckingFigure.MoveCheck(King.Field, this) && CheckingFigure.NoFigureInPath(King.Field, this))
                 {
+                    Console.WriteLine(this.Turn + "'s King is in check, you have to move him");
                     return true;
                 }
             }
@@ -349,7 +364,13 @@ namespace ChessProblem
 
         private bool DifferentColorCheck(IFigure fig, Field f1)
         {
-            return fig.Color != f1.Figure.Color;
+            if(fig.Color != f1.Figure.Color)
+            {
+                f1.Figure.Eaten = true;
+                return true;
+            }
+            Console.WriteLine("Another piece of the same color occupies the field");
+            return false;
         }
 
         public Field FindFieldOnBoard(Field field) 
