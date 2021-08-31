@@ -12,6 +12,8 @@ namespace ChessProblem
         public char Mark { get ; set ; }
 
         public Color Color { get; set; }
+        public bool EnPassantCheck { get; set; }
+        public bool Eaten { get; set; }
 
         public Knight(Field field, char mark, Color color)
         {
@@ -25,6 +27,8 @@ namespace ChessProblem
             {
                 Mark = Char.ToUpper(mark);
             }
+            EnPassantCheck = false;
+            Eaten = false;
         }
 
         public Knight(char mark, Color color)
@@ -40,9 +44,10 @@ namespace ChessProblem
             Color = color;
         }
 
-        public bool MoveCheck(Field f1)
-        {
-            return this.Field.CalculateFieldDistance(f1) == 3 && !this.Field.CheckSameColumn(f1) && !this.Field.CheckSameRow(f1);
-        }
+        public bool MoveCheck(Field f1) => this.Field.CalculateFieldDistance(f1) == 3 && !this.Field.CheckSameColumn(f1) && !this.Field.CheckSameRow(f1);
+        public bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
+        public bool NoFigureInPath(Field f1, Chessboard chessboard) => true;
+
+        
     }
 }

@@ -12,6 +12,7 @@ namespace ChessProblem
         public Field [,] Board { get; set; }
         public List<IFigure> Figures { get; set; }
         public List<IFigure> EatenFigures { get; set; }
+        public Color Turn { get; set; }
 
         
 
@@ -19,25 +20,114 @@ namespace ChessProblem
         {
             Figures = new List<IFigure>();
             EatenFigures = new List<IFigure>();
+            Turn = Color.WHITE;
             Field [,] testBoard = new Field[8, 8];
             for(int i = 0; i < testBoard.GetLength(0); i++) 
             { 
                 for(int j = 0; j < testBoard.GetLength(1); j++)
                 {
-                    Field field = new Field(column: (char)(j + 65), row:i + 1);
+                    Field field = new Field(column: (char)(j + 65), row:8-i);
                     testBoard[i, j] = field;
                 }
             }
 
             this.Board = testBoard;
+            InitBoard();
+
+
+        }
+
+        private void InitBoard()
+        {
+            Field f1 = new Field('a', 1);
+            Field f2 = new Field('b', 1);
+            Field f3 = new Field('c', 1);
+            Field f4 = new Field('d', 1);
+            Field f5 = new Field('e', 1);
+            Field f6 = new Field('f', 1);
+            Field f7 = new Field('g', 1);
+            Field f8 = new Field('h', 1);
+            Field f9 = new Field('a', 8);
+            Field f10 = new Field('b', 8);
+            Field f11 = new Field('c', 8);
+            Field f12 = new Field('d', 8);
+            Field f13= new Field('e', 8);
+            Field f14= new Field('f', 8);
+            Field f15= new Field('g', 8);
+            Field f16= new Field('h', 8);
+
+            IFigure fig1 = new Rook(f1, 'r', Color.WHITE);
+            IFigure fig2 = new Knight(f2, 'n', Color.WHITE);
+            IFigure fig3 = new Bishop(f3, 'b', Color.WHITE);
+            IFigure fig4 = new Queen(f4, 'q', Color.WHITE);
+            IFigure fig5 = new King(f5, 'k', Color.WHITE);
+            IFigure fig6 = new Bishop(f6, 'b', Color.WHITE);
+            IFigure fig7 = new Knight(f7, 'n', Color.WHITE);
+            IFigure fig8 = new Rook(f8, 'r', Color.WHITE);
+
+            IFigure fig9 = new Rook(f9, 'r', Color.BLACK);
+            IFigure fig10 = new Knight(f10, 'n', Color.BLACK);
+            IFigure fig11= new Bishop(f11, 'b', Color.BLACK);
+            IFigure fig12= new Queen(f12, 'q', Color.BLACK);
+            IFigure fig13= new King(f13, 'k', Color.BLACK);
+            IFigure fig14= new Bishop(f14, 'b', Color.BLACK);
+            IFigure fig15= new Knight(f15, 'n', Color.BLACK);
+            IFigure fig16= new Rook(f16, 'r', Color.BLACK);
+
+            InitPawns();
+
+
+            PlacePiece(fig1);
+            PlacePiece(fig2);
+            PlacePiece(fig3);
+            PlacePiece(fig4);
+            PlacePiece(fig5);
+            PlacePiece(fig6);
+            PlacePiece(fig7);
+            PlacePiece(fig8);
+            PlacePiece(fig9);
+            PlacePiece(fig10);
+            PlacePiece(fig11);
+            PlacePiece(fig12);
+            PlacePiece(fig13);
+            PlacePiece(fig14);
+            PlacePiece(fig15);
+            PlacePiece(fig16);
+        }
+
+        private void InitPawns()
+        {
+            
+                for (int j = 0; j < Board.GetLength(1); j++)
+                {
+                    PlacePiece(new Pawn(Color.WHITE, Board[6, j]));
+                    PlacePiece(new Pawn(Color.BLACK, Board[1, j]));
+            }
+                
+            
+        }
+
+        internal void ChangeTurn()
+        {
+            if(this.Turn == Color.WHITE)
+            {
+                this.Turn = Color.BLACK;
+            }
+            else
+            {
+                this.Turn = Color.WHITE;
+            }
         }
 
         public void BoardPrint()
         {
+            Console.WriteLine("  A B C D E F G H");
             for (int i = 0; i < Board.GetLength(0); i++)
             {
+                Console.Write(8 - i + " ");
                 for (int j = 0; j < Board.GetLength(1); j++)
                 {
+                    
                     if (Board[i, j].Figure == null)
                     {
                         Console.Write("* ");
@@ -46,10 +136,11 @@ namespace ChessProblem
                     {
                         Console.Write(Board[i, j].Figure.Mark + " ");
                     }
-                    
                 }
+                Console.Write((8 - i));
                 Console.WriteLine();
             }
+            Console.WriteLine("  A B C D E F G H");
         }
 
         public void BoardWrite()
@@ -123,7 +214,7 @@ namespace ChessProblem
             return false;
         }
 
-        private bool CheckAvailableField(IFigure fig, Field field)
+        public bool CheckAvailableField(IFigure fig, Field field)
         {
             if (field.Figure == null)
             {
@@ -132,48 +223,128 @@ namespace ChessProblem
             return false;
         }
 
-        private bool NoFigureInPath(IFigure fig, Field field)
-        {
-            if (fig.Mark == 'n' || fig.Mark == 'N')
-            {
-                return true;
-            }
-            return false;
-            
-        }
 
-        public bool MovePiece(IFigure fig, Field field)
+        public bool MovePiece(Field pieceField, Field destinationField)
         {
-            Field f1 = FindFieldOnBoard(field);
-            if (fig.MoveCheck(f1))
+            IFigure FigureToMove = FindPieceOnBoard(pieceField);
+            Field DestinationField = FindFieldOnBoard(destinationField);
+
+            if(FigureToMove == null || DestinationField == null)
             {
-                if (CheckAvailableField(fig, f1))
-                {
-                    fig.Field.Figure = null;
-                    fig.Field = f1;
-                    f1.Figure = fig;
-                    return true;
-                }
-                else
-                {
-                    if(DifferentColorCheck(fig, f1))
+                Console.WriteLine("Piece or field not found on board. Try again");
+                return false;
+            }
+
+            if (FigureToMove.Color != this.Turn)
+            {
+                Console.WriteLine("It's not " + FigureToMove.Color + "'s turn to move. Choose a " + this.Turn + " figure");
+                return false;
+            }
+
+            if (KingInCheck())
+            {
+                Console.WriteLine(this.Turn + "'s King is in check, you have to move him");
+                return false;
+            }
+
+            if (FigureToMove.MoveCheck(DestinationField,this))
+            {
+                if (FigureToMove.NoFigureInPath(DestinationField, this)){
+                    if (CheckAvailableField(FigureToMove, DestinationField))
                     {
-                        EatenFigures.Add(f1.Figure);
-                        fig.Field.Figure = null;
-                        fig.Field = f1;
-                        f1.Figure = fig;
-                        Console.WriteLine("Figure eaten");
+                        RemoveEatenFigures(FigureToMove);
+                        Move(FigureToMove, DestinationField);
                         return true;
                     }
                     else
                     {
-                        Console.WriteLine("Another piece of the same color occupies the field");
-                        return false;
+                        if (DifferentColorCheck(FigureToMove, DestinationField))
+                        {
+                            DestinationField.Figure.Eaten = true;
+                            RemoveEatenFigures(FigureToMove);
+                            Move(FigureToMove, DestinationField);
+                            
+                            return true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Another piece of the same color occupies the field");
+                            return false;
+                        }
                     }
                 }
+                
+                
             }
-
+            Console.WriteLine("Illegal move with the piece");
             return false;
+        }
+
+        private bool KingInCheck()
+        {
+            IFigure King = Figures.Find(x => (x.Mark == 'k' || x.Mark == 'K') && x.Color == this.Turn);
+            foreach (IFigure CheckingFigure in Figures)
+            {
+                if (King.Color != CheckingFigure.Color && CheckingFigure.MoveCheck(King.Field, this) && CheckingFigure.NoFigureInPath(King.Field, this))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        
+
+        public void UncheckEnPassant()
+        {
+            foreach(IFigure figure in Figures)
+            {
+                if(figure.Color != this.Turn && figure.EnPassantCheck == true)
+                {
+                    figure.EnPassantCheck = false;
+                }
+            }
+        }
+
+        private void RemoveEatenFigures(IFigure FigureToMove)
+        {
+            IFigure figureToRemove = null;
+            foreach (IFigure figure in this.Figures)
+            {
+                if (figure.Eaten)
+                {
+                    figureToRemove = figure;
+                    break;
+                }
+            }
+            if(figureToRemove != null && figureToRemove.Field != null)
+            {
+                Console.WriteLine(figureToRemove.Mark + figureToRemove.Field.ToString() + " eaten by " + FigureToMove.Mark);
+                figureToRemove.Field.Figure = null;
+                figureToRemove.Field = null;
+                EatenFigures.Add(figureToRemove);
+                Figures.Remove(figureToRemove);
+            }
+            
+        }
+
+        private void Move(IFigure FigureToMove, Field DestinationField)
+        {
+            FigureToMove.Field.Figure = null;
+            FigureToMove.Field = DestinationField;
+            DestinationField.Figure = FigureToMove;
+        }
+
+        private IFigure FindPieceOnBoard(Field pieceField)
+        {
+            foreach(IFigure figure in Figures)
+            {
+                if (figure.Field.Equals(pieceField))
+                {
+                    return figure;
+                }
+            }
+            return null;
         }
 
         private bool DifferentColorCheck(IFigure fig, Field f1)
@@ -189,8 +360,6 @@ namespace ChessProblem
                 {
                     return f;
                 }
-
-
             }
             return null;
         }

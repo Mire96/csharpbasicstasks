@@ -14,12 +14,12 @@ namespace ChessProblem
         
         public char Mark {get; set;}
 
+        public bool EnPassantCheck { get; set; }
+        public bool Eaten { get; set; }
+
 
         public bool MoveCheck(Field f1);
-
-        
-
-
-
+        bool NoFigureInPath(Field f1, Chessboard chessboard);
+        bool MoveCheck(Field f1, Chessboard chessboard);
     }
 }
