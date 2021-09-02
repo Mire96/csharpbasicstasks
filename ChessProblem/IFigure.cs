@@ -10,7 +10,7 @@ namespace ChessProblem
     {
         public Color Color { get; set; }
 
-        public Field Field { get; set; }
+        public IField Field { get; set; }
         
         public char Mark {get; set;}
 
@@ -18,8 +18,8 @@ namespace ChessProblem
         public bool Eaten { get; set; }
 
 
-        public bool MoveCheck(Field f1);
-        bool NoFigureInPath(Field f1, Chessboard chessboard);
-        bool MoveCheck(Field f1, Chessboard chessboard);
+        public bool MoveCheck(IField f1);
+        bool NoFigureInPath(IField f1, Chessboard chessboard);
+        bool MoveCheck(IField f1, Chessboard chessboard);
     }
 }

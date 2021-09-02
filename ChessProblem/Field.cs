@@ -6,18 +6,21 @@ using System.Threading.Tasks;
 
 namespace ChessProblem
 {
-    public class Field
+    public class Field : IField
     {
-        public char Column { get; set;}
+
+        public char Column { get; set; }
         public int Row { get; set; }
+        public Color Color { get; set; }
         public IFigure Figure { get => figure; set => figure = value; }
 
         private IFigure figure = null;
 
-        public Field(char column, int row)
+        public Field(char column, int row, Color color, string kindofwood)
         {
             Column = Char.ToUpper(column);
             Row = row;
+            Color = color;
         }
 
         public Field(string coordinates)

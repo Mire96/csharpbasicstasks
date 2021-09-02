@@ -8,6 +8,7 @@ namespace ChessProblemTests
         [SetUp]
         public void Setup()
         {
+
         }
 
         

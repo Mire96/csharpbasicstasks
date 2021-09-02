@@ -11,13 +11,13 @@ namespace ChessProblem
 {
     class King : IFigure
     {
-        public Field Field { get ; set ; }
+        public IField Field { get ; set ; }
         public char Mark { get ; set ; }
         public Color Color { get ; set ; }
         public bool EnPassantCheck { get; set; }
         public bool Eaten { get; set; }
 
-        public King(Field field, char mark, Color color)
+        public King(IField field, char mark, Color color)
         {
             Field = field;
             if (color == Color.WHITE)

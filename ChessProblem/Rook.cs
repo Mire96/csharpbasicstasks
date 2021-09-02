@@ -9,14 +9,14 @@ namespace ChessProblem
 {
     public class Rook : IFigure
     {
-        public Field Field { get ; set ; }
+        public IField Field { get ; set ; }
         public char Mark { get ; set ; }
 
         public Color Color { get; set; }
         public bool EnPassantCheck { get; set; }
         public bool Eaten { get; set; }
 
-        public Rook(Field field, char mark, Color color)
+        public Rook(IField field, char mark, Color color)
         {
             Field = field;
             Color = color;

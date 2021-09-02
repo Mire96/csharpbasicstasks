@@ -8,14 +8,14 @@ namespace ChessProblem
 {
     public class Queen : IFigure
     {
-        public Field Field { get ; set ; }
+        public IField Field { get ; set ; }
         public char Mark { get ; set ; }
 
         public Color Color { get; set; }
         public bool EnPassantCheck { get; set; }
         public bool Eaten { get; set; }
 
-        public Queen(Field field, char mark, Color color)
+        public Queen(IField field, char mark, Color color)
         {
             Field = field;
             Color = color;
@@ -44,9 +44,9 @@ namespace ChessProblem
             Color = color;
         }
 
-        public bool MoveCheck(Field f1) => Field.CheckSameDiagonal(f1) || Field.CheckSameColumn(f1) || Field.CheckSameRow(f1);
+        public bool MoveCheck(IField f1) => Field.CheckSameDiagonal(f1) || Field.CheckSameColumn(f1) || Field.CheckSameRow(f1);
 
-        public bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
+        public bool MoveCheck(IField f1, Chessboard chessboard) => MoveCheck(f1);
 
         public bool NoFigureInPath(Field f1, Chessboard chessboard)
         {

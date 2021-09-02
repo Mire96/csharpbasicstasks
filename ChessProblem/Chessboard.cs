@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Autofac;
 
 namespace ChessProblem
 {
@@ -26,7 +27,7 @@ namespace ChessProblem
             { 
                 for(int j = 0; j < testBoard.GetLength(1); j++)
                 {
-                    Field field = new Field(column: (char)(j + 65), row:8-i);
+                    Field field = new Field(column: (char)(j + 65), row:8-i, Color.WHITE, "");
                     testBoard[i, j] = field;
                 }
             }
@@ -39,22 +40,28 @@ namespace ChessProblem
 
         private void InitBoard()
         {
-            Field f1 = new Field('a', 1);
-            Field f2 = new Field('b', 1);
-            Field f3 = new Field('c', 1);
-            Field f4 = new Field('d', 1);
-            Field f5 = new Field('e', 1);
-            Field f6 = new Field('f', 1);
-            Field f7 = new Field('g', 1);
-            Field f8 = new Field('h', 1);
-            Field f9 = new Field('a', 8);
-            Field f10 = new Field('b', 8);
-            Field f11 = new Field('c', 8);
-            Field f12 = new Field('d', 8);
-            Field f13= new Field('e', 8);
-            Field f14= new Field('f', 8);
-            Field f15= new Field('g', 8);
-            Field f16= new Field('h', 8);
+            ContainerBuilder objContainer = new ContainerBuilder();
+            objContainer.RegisterType<Field>()
+                        .As<IField>();
+         
+            IContainer Container = objContainer.Build();
+
+            IField f1 = Container.Resolve<IField>();
+            IField f2 = Container.Resolve<IField>();
+            IField f3 = Container.Resolve<IField>();
+            IField f4 = Container.Resolve<IField>();
+            IField f5 = Container.Resolve<IField>();
+            IField f6 = Container.Resolve<IField>();
+            IField f7 = Container.Resolve<IField>();
+            IField f8 = Container.Resolve<IField>();
+            IField f9 = Container.Resolve<IField>();
+            IField f10 = Container.Resolve<IField>();
+            IField f11 = Container.Resolve<IField>();
+            IField f12 = Container.Resolve<IField>();
+            IField f13= Container.Resolve<IField>();
+            IField f14= Container.Resolve<IField>();
+            IField f15= Container.Resolve<IField>();
+            IField f16= Container.Resolve<IField>();
 
             IFigure fig1 = new Rook(f1, 'r', Color.WHITE);
             IFigure fig2 = new Knight(f2, 'n', Color.WHITE);
@@ -373,7 +380,7 @@ namespace ChessProblem
             return false;
         }
 
-        public Field FindFieldOnBoard(Field field) 
+        public Field FindFieldOnBoard(IField field) 
         { 
             foreach(Field f in Board)
             {
