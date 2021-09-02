@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChessProblem
 {
-    public class Rook : IFigure
+    public class Rook : Figure
     {
         public Field Field { get ; set ; }
         public char Mark { get ; set ; }
@@ -16,46 +16,34 @@ namespace ChessProblem
         public bool EnPassantCheck { get; set; }
         public bool Eaten { get; set; }
 
-        public Rook(Field field, char mark, Color color)
+        public Rook(Field field, char mark, Color color) : base(color, field, mark)
         {
-            Field = field;
-            Color = color;
-            if (color == Color.WHITE)
-            {
-                Mark = Char.ToLower(mark);
-            }
-            else
-            {
-                Mark = Char.ToUpper(mark);
-            }
-            EnPassantCheck = false;
-            Eaten = false;
+            //Field = field;
+            //Color = color;
+            //if (color == Color.WHITE)
+            //{
+            //    Mark = Char.ToLower(mark);
+            //}
+            //else
+            //{
+            //    Mark = Char.ToUpper(mark);
+            //}
+            //EnPassantCheck = false;
+            //Eaten = false;
 
         }
 
-        public Rook(char mark, Color color)
-        {
-            Color = color;
-            if (color == Color.WHITE)
-            {
-                Mark = Char.ToLower(mark);
-            }
-            else
-            {
-                Mark = Char.ToUpper(mark);
-            }
-            
-        }
+        
 
-        public bool MoveCheck(Field f1) => this.Field.CheckSameColumn(f1) || this.Field.CheckSameRow(f1);
+        public override bool MoveCheck(Field f1) => this.Field.CheckSameColumn(f1) || this.Field.CheckSameRow(f1);
 
-        public bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
+        public override bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
 
         //if there is no figure in path the method returns true
         //It goes through the list of figures and as soon as it finds one where it can move to 
         //and the distance checker shows its between the moving piece and the destination field
         //it returns false, indicating that there is a figure in path
-        public bool NoFigureInPath(Field f1, Chessboard chessboard)
+        public override bool NoFigureInPath(Field f1, Chessboard chessboard)
         {
             foreach (IFigure figure in chessboard.Figures)
             {

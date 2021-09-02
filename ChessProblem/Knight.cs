@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessProblem
 {
-    public class Knight : IFigure   
+    public class Knight : Figure   
     {
         public Field Field { get; set; }
         public char Mark { get ; set ; }
@@ -15,38 +15,26 @@ namespace ChessProblem
         public bool EnPassantCheck { get; set; }
         public bool Eaten { get; set; }
 
-        public Knight(Field field, char mark, Color color)
+        public Knight(Field field, char mark, Color color) : base(color, field, mark)
         {
-            Field = field;
-            Color = color;
-            if (color == Color.WHITE)
-            {
-                Mark = Char.ToLower(mark);
-            }
-            else
-            {
-                Mark = Char.ToUpper(mark);
-            }
-            EnPassantCheck = false;
-            Eaten = false;
+            //Field = field;
+            //Color = color;
+            //if (color == Color.WHITE)
+            //{
+            //    Mark = Char.ToLower(mark);
+            //}
+            //else
+            //{
+            //    Mark = Char.ToUpper(mark);
+            //}
+            //EnPassantCheck = false;
+            //Eaten = false;
         }
 
-        public Knight(char mark, Color color)
-        {
-            if (color == Color.WHITE)
-            {
-                Mark = Char.ToLower(mark);
-            }
-            else
-            {
-                Mark = Char.ToUpper(mark);
-            }
-            Color = color;
-        }
 
-        public bool MoveCheck(Field f1) => this.Field.CalculateFieldDistance(f1) == 3 && !this.Field.CheckSameColumn(f1) && !this.Field.CheckSameRow(f1);
-        public bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
-        public bool NoFigureInPath(Field f1, Chessboard chessboard) => true;
+        public override bool MoveCheck(Field f1) => this.Field.CalculateFieldDistance(f1) == 3 && !this.Field.CheckSameColumn(f1) && !this.Field.CheckSameRow(f1);
+        public override bool MoveCheck(Field f1, Chessboard chessboard) => MoveCheck(f1);
+        public override bool NoFigureInPath(Field f1, Chessboard chessboard) => true;
 
         
     }

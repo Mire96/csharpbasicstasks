@@ -39,6 +39,7 @@ namespace ChessProblem
 
         private void InitBoard()
         {
+
             Field f1 = new Field('a', 1);
             Field f2 = new Field('b', 1);
             Field f3 = new Field('c', 1);
@@ -76,8 +77,8 @@ namespace ChessProblem
             IFigure fig15= new Knight(f15, 'n', Color.BLACK);
             IFigure fig16= new Rook(f16, 'r', Color.BLACK);
 
-            InitPawns();
 
+            InitPawns();
 
             PlacePiece(fig1);
             PlacePiece(fig2);
@@ -97,16 +98,16 @@ namespace ChessProblem
             PlacePiece(fig16);
         }
 
+        
+
         private void InitPawns()
         {
-            
-                for (int j = 0; j < Board.GetLength(1); j++)
-                {
-                    PlacePiece(new Pawn(Color.WHITE, Board[6, j]));
-                    PlacePiece(new Pawn(Color.BLACK, Board[1, j]));
+            for (int j = 0; j < Board.GetLength(1); j++)
+            {
+                PlacePiece(new Pawn(Color.WHITE, Board[6, j], 'p'));
+                PlacePiece(new Pawn(Color.BLACK, Board[1, j], 'p'));
             }
                 
-            
         }
 
         internal void ChangeTurn()
@@ -133,11 +134,9 @@ namespace ChessProblem
                     if (Board[i, j].Figure == null)
                     {
                         Console.Write("* ");
+                        continue;
                     }
-                    else
-                    {
-                        Console.Write(Board[i, j].Figure.Mark + " ");
-                    }
+                    Console.Write(Board[i, j].Figure.Mark + " ");
                 }
                 Console.Write((8 - i));
                 Console.WriteLine();
@@ -227,7 +226,6 @@ namespace ChessProblem
 
         private bool ExecuteMove(IFigure FigureToMove, Field DestinationField) 
         {
-            bool isMoveExecuted = false;
 
             if (FigureToMove.MoveCheck(DestinationField, this) &&
                FigureToMove.NoFigureInPath(DestinationField, this) &&
@@ -235,25 +233,25 @@ namespace ChessProblem
             {
                 RemoveEatenFigures(FigureToMove);
                 Move(FigureToMove, DestinationField);
-                isMoveExecuted = true;
+                return true;
 
             }
-            return isMoveExecuted;
+            Console.WriteLine("Illegal move with the piece");
+            return false;
         }
 
 
 
         private bool IsCanBeMoveExecuted(IFigure FigureToMove, Field DestinationField) 
         {
-            bool isMoveCanBeExecuted = true;
             if (IsFigureOrFieldNotFound(FigureToMove, DestinationField) ||
                IsNotCorrectColorTurn(FigureToMove) ||
                IsKingInCheck())
             {
-                isMoveCanBeExecuted = false;
+                return false;
             }
 
-            return isMoveCanBeExecuted;
+            return true;
         }
 
         public bool MovePiece(Field pieceField, Field destinationField)

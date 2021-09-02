@@ -14,6 +14,8 @@ namespace ChessProblem
             Console.ReadLine();
             chessboard.PrintCoordinates();
 
+            
+
             while (true)
             {
                 //Console.Clear();

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ChessProblem
 {
-    class King : IFigure
+    class King : Figure
     {
         public Field Field { get ; set ; }
         public char Mark { get ; set ; }
@@ -17,7 +17,7 @@ namespace ChessProblem
         public bool EnPassantCheck { get; set; }
         public bool Eaten { get; set; }
 
-        public King(Field field, char mark, Color color)
+        public King(Field field, char mark, Color color) : base(color, field, mark)
         {
             Field = field;
             if (color == Color.WHITE)
@@ -34,7 +34,7 @@ namespace ChessProblem
         }
 
 
-        public bool MoveCheck(Field f1)
+        public override bool MoveCheck(Field f1)
         {
             return this.BasicKingMoveRules(f1);
         }
@@ -44,12 +44,12 @@ namespace ChessProblem
             return (this.Field.CheckSameDiagonal(f1) && this.Field.CalculateFieldDistance(f1) == 2) || ((this.Field.CheckSameRow(f1) || this.Field.CheckSameColumn(f1)) && this.Field.CalculateFieldDistance(f1) == 1);
         }
 
-        public bool NoFigureInPath(Field f1, Chessboard chessboard)
+        public override bool NoFigureInPath(Field f1, Chessboard chessboard)
         {
             return true;
         }
 
-        public bool MoveCheck(Field f1, Chessboard chessboard)
+        public override bool MoveCheck(Field f1, Chessboard chessboard)
         {
             if (BasicKingMoveRules(f1) && CheckForCheck(f1, chessboard))
             {
@@ -71,5 +71,6 @@ namespace ChessProblem
             }
             return true;
         }
+
     }
 }

@@ -16,9 +16,7 @@ namespace ChessProblem
 
         public abstract bool MoveCheck(Field f1);
 
-
         public abstract bool MoveCheck(Field f1, Chessboard chessboard);
-
 
         public abstract bool NoFigureInPath(Field f1, Chessboard chessboard);
         
@@ -27,13 +25,11 @@ namespace ChessProblem
         {
             Color = color;
             Field = field;
+            Mark = Char.ToUpper(mark);
+            
             if (color == Color.WHITE)
             {
                 Mark = Char.ToLower(mark);
-            }
-            else
-            {
-                Mark = Char.ToUpper(mark);
             }
             EnPassantCheck = false;
             Eaten = false;

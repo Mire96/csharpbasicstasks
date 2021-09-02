@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessProblem
 {
-    class Pawn : IFigure
+    class Pawn : Figure
     {
         public Color Color { get; set; }
         public Field Field { get; set; }
@@ -15,30 +15,30 @@ namespace ChessProblem
         public bool EnPassantCheck { get; set; }
         public bool Eaten { get; set; }
 
-        public Pawn(Color color, Field field)
+        public Pawn(Color color, Field field, char mark) : base(color, field, mark)
         {
-            Color = color;
-            Field = field;
-            if(color == Color.WHITE)
-            {
-                Mark = 'p';
-            }
-            else
-            {
-                Mark = 'P';
-            }
+            //Color = color;
+            //Field = field;
+            //if(color == Color.WHITE)
+            //{
+            //    Mark = 'p';
+            //}
+            //else
+            //{
+            //    Mark = 'P';
+            //}
 
-            EnPassantCheck = false;
+            //EnPassantCheck = false;
         }
 
-        public bool MoveCheck(Field f1)
+        public override bool MoveCheck(Field f1)
         {
             Console.WriteLine("THis method is deprecated");
             return true;
         }
 
 
-        public bool MoveCheck(Field f1, Chessboard chessboard)
+        public override bool MoveCheck(Field f1, Chessboard chessboard)
         {
             return ColumnMoveCheck(f1, chessboard) || DiagonalMoveCheck(f1, chessboard);
         }
@@ -124,7 +124,7 @@ namespace ChessProblem
             return false;
         }
 
-        public bool NoFigureInPath(Field f1, Chessboard chessboard)
+        public override bool NoFigureInPath(Field f1, Chessboard chessboard)
         {
             return true;
         }
